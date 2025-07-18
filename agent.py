@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 # Load your API key from .env file
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
+print("API KEY:", api_key)
 
 # Set up Gemini LLM
 llm = ChatGoogleGenerativeAI(
@@ -15,141 +16,142 @@ llm = ChatGoogleGenerativeAI(
     google_api_key=api_key
 )
 
-# Core LangGraph Functions
+# === Core LangGraph Functions for Quality Education ===
 
-def get_food_intake(dictionary):
+def get_education_input(dictionary):
     """This will be filled by Flask form."""
     return dictionary
 
-def analyze_nutrition(dictionary):
+def analyze_education_data(dictionary):
     prompt = f"""
-    You are an expert nutritionist. Analyze the following food intake and provide:
-    1. Estimated total calories
-    2. Macronutrient breakdown (protein, carbs, fats in grams)
-    3. Key vitamins and minerals present
-    4. Overall nutritional quality assessment
+    You are an education policy expert. Analyze the following student or school education data and provide:
+    1. Learning level summary (e.g., foundational, intermediate, advanced)
+    2. Strengths and weaknesses in learning
+    3. Accessibility or inclusion gaps (if any)
+    4. Quality indicators: teaching method, infrastructure, technology use
     
-    Food intake: {dictionary['food_intake']}
+    Input: {dictionary['education_input']}
     
-    Provide your analysis in a structured format with specific numbers where possible.
+    Provide a structured and detailed analysis.
     """
     response = llm.invoke([HumanMessage(content=prompt)])
-    dictionary["nutrition_analysis"] = response.content.strip()
+    dictionary["education_analysis"] = response.content.strip()
     return dictionary
 
-def identify_gaps(dictionary):
+def classify_learning_quality(dictionary):
     prompt = f"""
-    Based on this nutritional analysis, identify the main nutritional gaps or concerns and categorize as one of the following:
-    - "deficient"
-    - "balanced"
-    - "excessive"
+    Based on this analysis, categorize the overall education quality as one of the following:
+    - "needs_improvement"
+    - "adequate"
+    - "excellent"
     
-    Analysis: {dictionary['nutrition_analysis']}
+    Analysis: {dictionary['education_analysis']}
     
-    Respond with only one word: deficient, balanced, or excessive
+    Respond with only one word: needs_improvement, adequate, or excellent.
     """
     response = llm.invoke([HumanMessage(content=prompt)])
     category = response.content.strip().lower()
-    dictionary["nutrition_category"] = category
+    dictionary["education_category"] = category
     return dictionary
 
-def nutrition_router(dictionary):
-    cat = dictionary["nutrition_category"]
-    if "deficient" in cat:
-        return "deficient"
-    elif "balanced" in cat:
-        return "balanced"
-    elif "excessive" in cat:
-        return "excessive"
+def education_router(dictionary):
+    cat = dictionary["education_category"]
+    if "needs_improvement" in cat:
+        return "needs_improvement"
+    elif "adequate" in cat:
+        return "adequate"
+    elif "excellent" in cat:
+        return "excellent"
     else:
-        return "balanced"
+        return "adequate"
 
-def deficient_recommendations(dictionary):
+def improvement_recommendations(dictionary):
     prompt = f"""
-    Based on this nutritional analysis showing deficiencies, provide specific recommendations:
-    1. List 5-7 specific foods to add to the diet
-    2. Suggest meal ideas for tomorrow
-    3. Highlight critical nutrients that need attention
-    4. Provide portion size guidance
+    The education analysis shows a need for improvement. Please provide:
+    1. 4-5 practical suggestions to improve education quality
+    2. Tools, technologies, or platforms that can help
+    3. Teacher or parental involvement strategies
+    4. Personalized learning methods if applicable
 
-    Analysis: {dictionary['nutrition_analysis']}
+    Analysis: {dictionary['education_analysis']}
     """
     response = llm.invoke([HumanMessage(content=prompt)])
-    dictionary["recommendations"] = f"🔴 NUTRITIONAL DEFICIENCIES DETECTED\n\n{response.content.strip()}"
+    dictionary["recommendations"] = f"🔴 EDUCATION NEEDS IMPROVEMENT\n\n{response.content.strip()}"
     return dictionary
 
-def balanced_recommendations(dictionary):
+def adequate_recommendations(dictionary):
     prompt = f"""
-    Based on this well-balanced nutritional intake, provide maintenance recommendations:
-    1. Suggest 3-4 foods to maintain variety
-    2. Recommend one optimization for tomorrow
-    3. Highlight what they're doing well
-    4. Suggest any minor improvements
+    The education input shows adequate quality. Provide:
+    1. Suggestions for maintaining current quality
+    2. Tips to enhance student engagement or personalization
+    3. Technology/tools to make learning more effective
 
-    Analysis: {dictionary['nutrition_analysis']}
+    Analysis: {dictionary['education_analysis']}
     """
     response = llm.invoke([HumanMessage(content=prompt)])
-    dictionary["recommendations"] = f"✅ WELL-BALANCED NUTRITION\n\n{response.content.strip()}"
+    dictionary["recommendations"] = f"🟡 ADEQUATE EDUCATION QUALITY\n\n{response.content.strip()}"
     return dictionary
 
-def excessive_recommendations(dictionary):
+def excellence_recommendations(dictionary):
     prompt = f"""
-    Based on this nutritional analysis showing excessive intake, provide balancing recommendations:
-    1. Suggest 5-6 foods to reduce or replace
-    2. Recommend lighter meal options for tomorrow
-    3. Highlight areas of concern (calories, sugar, sodium, etc.)
-    4. Provide portion control tips
+    The analysis shows excellent education quality. Please:
+    1. Highlight what is working well
+    2. Suggest innovations or advanced tools to go further
+    3. Recommend ways to share this model with others (e.g., teachers, schools)
 
-    Analysis: {dictionary['nutrition_analysis']}
+    Analysis: {dictionary['education_analysis']}
     """
     response = llm.invoke([HumanMessage(content=prompt)])
-    dictionary["recommendations"] = f"🟡 EXCESSIVE INTAKE DETECTED\n\n{response.content.strip()}"
+    dictionary["recommendations"] = f"✅ EXCELLENT EDUCATION QUALITY\n\n{response.content.strip()}"
     return dictionary
 
-def generate_meal_plan(dictionary):
+def generate_learning_plan(dictionary):
     prompt = f"""
-    Based on the nutritional analysis and recommendations, create a simple meal plan for tomorrow:
+    Based on the education analysis and recommendations, create a learning plan for tomorrow:
+    
+    - Morning: (topics, duration)
+    - Afternoon: (activities, tools)
+    - Evening: (review, parent/teacher suggestions)
+    
+    Use personalized strategies wherever possible.
 
-    Breakfast: (one option)
-    Lunch: (one option)  
-    Dinner: (one option)
-    Snacks: (1-2 healthy options)
-
-    Current analysis: {dictionary['nutrition_analysis']}
+    Analysis: {dictionary['education_analysis']}
     Recommendations: {dictionary['recommendations']}
     """
     response = llm.invoke([HumanMessage(content=prompt)])
-    dictionary["meal_plan"] = response.content.strip()
+    dictionary["learning_plan"] = response.content.strip()
     return dictionary
 
 # 👇 Wrapper function to be called from Flask
-def run_nutrition_agent(food_input):
-    # Step 1: Build graph
+def run_education_agent(user_input):
+    # Step 1: Build the graph
     builder = StateGraph(dict)
-    builder.set_entry_point("get_food_intake")
-    builder.add_node("get_food_intake", get_food_intake)
-    builder.add_node("analyze_nutrition", analyze_nutrition)
-    builder.add_node("identify_gaps", identify_gaps)
-    builder.add_node("deficient", deficient_recommendations)
-    builder.add_node("balanced", balanced_recommendations)
-    builder.add_node("excessive", excessive_recommendations)
-    builder.add_node("meal_plan", generate_meal_plan)
+    builder.set_entry_point("get_education_input")
+    builder.add_node("get_education_input", get_education_input)
+    builder.add_node("analyze_education_data", analyze_education_data)
+    builder.add_node("classify_learning_quality", classify_learning_quality)
+    builder.add_node("needs_improvement", improvement_recommendations)
+    builder.add_node("adequate", adequate_recommendations)
+    builder.add_node("excellent", excellence_recommendations)
+    builder.add_node("learning_plan", generate_learning_plan)
 
-    builder.add_edge("get_food_intake", "analyze_nutrition")
-    builder.add_edge("analyze_nutrition", "identify_gaps")
-    builder.add_conditional_edges("identify_gaps", nutrition_router, {
-        "deficient": "deficient",
-        "balanced": "balanced",
-        "excessive": "excessive"
+    builder.add_edge("get_education_input", "analyze_education_data")
+    builder.add_edge("analyze_education_data", "classify_learning_quality")
+    builder.add_conditional_edges("classify_learning_quality", education_router, {
+        "needs_improvement": "needs_improvement",
+        "adequate": "adequate",
+        "excellent": "excellent"
     })
 
-    builder.add_edge("deficient", "meal_plan")
-    builder.add_edge("balanced", "meal_plan")
-    builder.add_edge("excessive", "meal_plan")
-    builder.add_edge("meal_plan", END)
+    builder.add_edge("needs_improvement", "learning_plan")
+    builder.add_edge("adequate", "learning_plan")
+    builder.add_edge("excellent", "learning_plan")
+    builder.add_edge("learning_plan", END)
 
     # Step 2: Run the graph
     graph = builder.compile()
-    final_state = graph.invoke({"food_intake": food_input})
+    final_state = graph.invoke({"education_input": user_input})
 
-    return final_state["recommendations"], final_state["meal_plan"]
+    return final_state["recommendations"], final_state["learning_plan"]
+
+
