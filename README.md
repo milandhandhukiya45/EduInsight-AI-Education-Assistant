@@ -82,5 +82,5 @@ python app.py #to run
 ```bash
 AUTHOR
 Milan Dhandhukiya
-```bash
+```
 
