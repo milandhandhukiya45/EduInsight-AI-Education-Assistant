@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NutritionGenie - AI Nutrition Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #43a047;
+        }
+
+        .output-section {
+            margin-top: 30px;
+        }
+
+        .box {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-left: 6px solid #4CAF50;
+            border-radius: 6px;
+            white-space: pre-wrap;
+        }
+
+        .subheading {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🥗 NutritionGenie</h1>
+
+        <form method="post">
+            <label for="food">🍽️ Enter all the foods you ate today:</label>
+            <textarea name="food" id="food" required>{{ food_input or '' }}</textarea>
+            <button type="submit">Analyze Nutrition</button>
+        </form>
+
+        {% if recommendations %}
+        <div class="output-section">
+            <div class="subheading">📝 Personalized Recommendations</div>
+            <div class="box">{{ recommendations }}</div>
+        </div>
+        {% endif %}
+
+        {% if meal_plan %}
+        <div class="output-section">
+            <div class="subheading">📅 Tomorrow's Meal Plan</div>
+            <div class="box">{{ meal_plan }}</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        © 2025 NutritionGenie · Powered by Gemini + LangGraph + Flask
+    </div>
+</body>
+</html>
