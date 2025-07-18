@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NutritionGenie - AI Nutrition Assistant</title>
+    <title>EduInsight - AI Education Assistant</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -22,7 +22,7 @@
 
         h1 {
             text-align: center;
-            color: #4CAF50;
+            color: #2196F3;
             margin-bottom: 25px;
         }
 
@@ -45,7 +45,7 @@
         button {
             margin-top: 20px;
             padding: 12px 25px;
-            background-color: #4CAF50;
+            background-color: #2196F3;
             color: white;
             border: none;
             border-radius: 6px;
@@ -55,7 +55,7 @@
         }
 
         button:hover {
-            background-color: #43a047;
+            background-color: #1976D2;
         }
 
         .output-section {
@@ -65,7 +65,7 @@
         .box {
             background-color: #f9f9f9;
             padding: 20px;
-            border-left: 6px solid #4CAF50;
+            border-left: 6px solid #2196F3;
             border-radius: 6px;
             white-space: pre-wrap;
         }
@@ -86,31 +86,31 @@
 </head>
 <body>
     <div class="container">
-        <h1>🥗 NutritionGenie</h1>
+        <h1>📘 EduInsight - AI Education Assistant</h1>
 
         <form method="post">
-            <label for="food">🍽️ Enter all the foods you ate today:</label>
-            <textarea name="food" id="food" required>{{ food_input or '' }}</textarea>
-            <button type="submit">Analyze Nutrition</button>
+            <label for="education">🎓 Describe the learning scenario or education profile:</label>
+            <textarea name="education" id="education" required>{{ education_input or '' }}</textarea>
+            <button type="submit">Analyze Education</button>
         </form>
 
         {% if recommendations %}
         <div class="output-section">
-            <div class="subheading">📝 Personalized Recommendations</div>
+            <div class="subheading">📝 Recommendations</div>
             <div class="box">{{ recommendations }}</div>
         </div>
         {% endif %}
 
-        {% if meal_plan %}
+        {% if learning_plan %}
         <div class="output-section">
-            <div class="subheading">📅 Tomorrow's Meal Plan</div>
-            <div class="box">{{ meal_plan }}</div>
+            <div class="subheading">📅 Suggested Learning Plan</div>
+            <div class="box">{{ learning_plan }}</div>
         </div>
         {% endif %}
     </div>
 
     <div class="footer">
-        © 2025 NutritionGenie · Powered by Gemini + LangGraph + Flask
+        © 2025 EduInsight · Powered by Gemini + LangGraph + Flask
     </div>
 </body>
 </html>
