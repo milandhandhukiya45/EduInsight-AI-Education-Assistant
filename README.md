@@ -61,6 +61,11 @@ EduInsight-AI-Education-Assistant/
 ```
 
 ```bash
+
+1. Add you API key
+In neww.env file -> write your API key
+GOOGLE_API_KEY= add your API key here
+
 2. Set Up Virtual Environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
